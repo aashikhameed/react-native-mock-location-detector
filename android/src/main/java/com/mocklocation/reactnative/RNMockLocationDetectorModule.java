@@ -37,6 +37,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.List;
 
+import com.facebook.react.bridge.Promise;
+
 public class RNMockLocationDetectorModule extends ReactContextBaseJavaModule {
 
   private final ReactApplicationContext reactContext;
@@ -51,11 +53,14 @@ public class RNMockLocationDetectorModule extends ReactContextBaseJavaModule {
     return "RNMockLocationDetector";
   }
 
-  
+  @ReactMethod // Notates a method that should be exposed to React
+  public void getMockLocationInfo(final Promise promise) {
+
+  }
+
   /** Java code for checkLocationProvide */
   @ReactMethod
-  public void checkMockLocationProvider(final String dialogTitle, final String dialogMessage,
-      final String dialogButtonText) {
+  public void isMockLocationEnabled(final Promise promise) {
     if (ActivityCompat.checkSelfPermission(getCurrentActivity(),
         Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
         && ActivityCompat.checkSelfPermission(getCurrentActivity(),
@@ -72,22 +77,16 @@ public class RNMockLocationDetectorModule extends ReactContextBaseJavaModule {
             if (location != null) {
               // Logic to handle location object
               if (isLocationFromMockProvider(getCurrentActivity(), location)) {
-                final AlertDialog.Builder builder = new AlertDialog.Builder(getCurrentActivity());
-                builder.setTitle(dialogTitle);
-                builder.setMessage(dialogMessage);
-                builder.setCancelable(false);
-                builder.setPositiveButton(dialogButtonText, new DialogInterface.OnClickListener() {
-                  public void onClick(DialogInterface dialog, int which) {
-                    getCurrentActivity().finish();
-                  }
-                });
-                builder.show();
-
-              } 
+                promise.resolve(true);
+                return;
+              } else {
+                promise.resolve(false);
+              }
             }
           }
 
         });
+
   }
 
   public boolean isLocationFromMockProvider(Context context, Location location) {

@@ -8,6 +8,8 @@ If you are building a location based app in RN, you have to validate if the user
 ## Getting started
 
 `$ npm install react-native-mock-location-detector --save`
+or
+`$ yarn add react-native-mock-location-detector`
 
 ### Mostly automatic installation
 
@@ -39,13 +41,12 @@ If you are building a location based app in RN, you have to validate if the user
 ```javascript
 import RNMockLocationDetector from 'react-native-mock-location-detector';
 
-RNMockLocationDetector.checkMockLocationProvider(
-    "Mock Location Detected",
-    "Please remove any mock location app first to continue using this app.",
-    "I Understand"
-  ); 
-```
+const isMockLocation = await RNMockLocationDetector.isMockLocationEnabled();
 
-## Example Project 
-You can find the example project here - https://github.com/adkandari/react-native-mock-location-detector-example
+if (isMockLocation) {
+  // Mock Location
+} else {
+  // Valid Location
+}
+```
   
